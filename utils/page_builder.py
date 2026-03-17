@@ -3,6 +3,7 @@ from typing import Iterator, Tuple
 
 from pages import SignupPage, LoginPage, HomePageLoggedIn, HomePageNotLoggedIn
 from utils.custom_types import PageObject
+from utils.element_builder import ElementBuilder
 
 
 class _Pagebuilder:
@@ -16,6 +17,7 @@ class _Pagebuilder:
 
     def __init__(self, page):
         self.page = page
+        self._element_builder = ElementBuilder(self.page)
 
     def __dir__(self) -> list['str']:
         """
