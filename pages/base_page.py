@@ -14,5 +14,5 @@ class _BasePage(ABC):
     def url(self) -> str:
         pass
 
-    def open(self):
-        self.page.goto(self.url)
+    async def open(self):
+        await self.page.goto(self.url)

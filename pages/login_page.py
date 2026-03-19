@@ -1,7 +1,7 @@
 import os
 
 from loguru import logger
-from playwright.async_api import Page, Locator
+from playwright.async_api import Page
 
 from pages.base_page import _BasePage
 from utils.element_builder import ElementBuilder
@@ -18,7 +18,7 @@ class LoginPage(_BasePage):
 
     @property
     def url(self) -> str:
-        return f"{os.getenv('BASE_URL')}/login"
+        return f'{super(_BasePage).url}/login'
 
     async def login(self, username: str, password: str) -> None:
         logger.info(f"Logging in with username: {username}")
