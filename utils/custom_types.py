@@ -1,5 +1,4 @@
-from typing import TypeVar, TypeAlias
-
+from typing import TypeAlias
 from pages import BasePage
 
-PageObject: TypeAlias = TypeVar('PageObject', bound=BasePage)
+PageObject: TypeAlias = BasePage

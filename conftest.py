@@ -1,8 +1,8 @@
 import pytest
 from faker import Faker
-from playwright.sync_api import Page
+from playwright.async_api import Page
 
-from utils import PageBuilder
+from utils.page_builder import PageBuilder
 
 
 @pytest.fixture
@@ -56,8 +56,3 @@ def inject_faker(request: pytest.FixtureRequest, _faker_instance: Faker) -> None
     cls = getattr(request, "cls", None)
     if cls and getattr(cls, "__faker_enabled__", True):
         cls.faker = _faker_instance
-
-
-@pytest.fixture
-def login_user():
-    ...
