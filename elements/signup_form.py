@@ -3,7 +3,7 @@ from playwright.async_api import Page, Locator
 from elements.base_element import _BaseElement
 
 
-class SignupSectionElement(_BaseElement):
+class SignupFormElement(_BaseElement):
 
     def __init__(self, page: Page):
         super().__init__(page)

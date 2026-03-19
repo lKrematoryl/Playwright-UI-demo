@@ -9,6 +9,13 @@ class ProductCardElement(_BaseElement):
         super().__init__(page)
         self._card = page.locator('.product-image-wrapper')
 
+    @classmethod
+    def scoped(cls, page: Page, root: Locator) -> 'ProductCardElement':
+        instance = cls.__new__(cls)
+        instance.page = page
+        instance._card = root.locator('.product-image-wrapper')
+        return instance
+
     @property
     def image(self) -> Locator:
         return self._card.locator('.single-products img')
