@@ -11,7 +11,7 @@ class OrderReviewElement(_BaseElement):
 
     @property
     def heading(self) -> Locator:
-        return self._section.locator('..').get_by_role('heading', name='Review Your Order')
+        return self.page.locator('div.step-one').get_by_role('heading', name='Review Your Order')
 
     @property
     def cart_rows(self) -> Locator:

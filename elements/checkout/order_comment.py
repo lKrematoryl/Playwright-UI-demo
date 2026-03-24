@@ -15,4 +15,4 @@ class OrderCommentElement(_BaseElement):
 
     @property
     def place_order_button(self) -> Locator:
-        return self._section.locator('..').get_by_role('link', name='Place Order')
+        return self.page.get_by_role('link', name='Place Order')

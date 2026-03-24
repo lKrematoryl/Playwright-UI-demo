@@ -1,7 +1,7 @@
 from playwright.async_api import Page, Locator
 
 from elements.base_element import _BaseElement
-from elements.product_card import ProductCardElement
+from elements.products.product_card import ProductCardElement
 
 
 class FeaturesItemsElement(_BaseElement):

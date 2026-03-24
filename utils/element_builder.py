@@ -2,28 +2,28 @@ from functools import cached_property
 
 from playwright.async_api import Page
 
-from elements.header import HeaderElement
-from elements.footer import FooterElement
-from elements.left_sidebar import LeftSidebarElement
-from elements.breadcrumb import BreadcrumbElement
-from elements.slider import SliderElement
-from elements.advertisement import AdvertisementElement
-from elements.product_card import ProductCardElement
-from elements.features_items import FeaturesItemsElement
-from elements.recommended_items import RecommendedItemsElement
-from elements.login_form import LoginFormElement
-from elements.signup_form import SignupFormElement
-from elements.contact_us import ContactUsElement
-from elements.account_registration import AccountRegistrationElement
-from elements.account_created import AccountCreatedElement
-from elements.cart_empty import CartEmptyElement
-from elements.cart_filled import CartFilledElement
-from elements.checkout_modal import CheckoutModalElement
-from elements.address_details import AddressDetailsElement
-from elements.order_review import OrderReviewElement
-from elements.order_comment import OrderCommentElement
-from elements.payment_form import PaymentFormElement
-from elements.order_placed import OrderPlacedElement
+from elements.shared.header import HeaderElement
+from elements.shared.footer import FooterElement
+from elements.shared.left_sidebar import LeftSidebarElement
+from elements.shared.breadcrumb import BreadcrumbElement
+from elements.home.slider import SliderElement
+from elements.products.advertisement import AdvertisementElement
+from elements.products.product_card import ProductCardElement
+from elements.home.features_items import FeaturesItemsElement
+from elements.home.recommended_items import RecommendedItemsElement
+from elements.auth.login_form import LoginFormElement
+from elements.auth.signup_form import SignupFormElement
+from elements.contact.contact_us import ContactUsElement
+from elements.auth.account_registration import AccountRegistrationElement
+from elements.auth.account_created import AccountCreatedElement
+from elements.cart.cart_empty import CartEmptyElement
+from elements.cart.cart_filled import CartFilledElement
+from elements.modals.checkout_modal import CheckoutModalElement
+from elements.checkout.address_details import AddressDetailsElement
+from elements.checkout.order_review import OrderReviewElement
+from elements.checkout.order_comment import OrderCommentElement
+from elements.payment.payment_form import PaymentFormElement
+from elements.payment.order_placed import OrderPlacedElement
 
 
 class ElementBuilder:

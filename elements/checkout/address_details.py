@@ -11,7 +11,7 @@ class AddressDetailsElement(_BaseElement):
 
     @property
     def heading(self) -> Locator:
-        return self._section.locator('..').get_by_role('heading', name='Address Details')
+        return self.page.locator('div.step-one').get_by_role('heading', name='Address Details')
 
     # --- Delivery address ---
 

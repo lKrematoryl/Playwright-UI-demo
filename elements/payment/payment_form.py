@@ -11,7 +11,7 @@ class PaymentFormElement(_BaseElement):
 
     @property
     def heading(self) -> Locator:
-        return self._section.locator('..').locator('..').get_by_role('heading', name='Payment')
+        return self.page.locator('div.step-one').get_by_role('heading', name='Payment')
 
     @property
     def name_on_card_input(self) -> Locator:
