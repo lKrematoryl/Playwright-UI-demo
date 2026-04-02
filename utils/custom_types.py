@@ -1,4 +1,4 @@
 from typing import TypeAlias
-from pages import BasePage
+from pages.base_page import BasePage
 
 PageObject: TypeAlias = BasePage
