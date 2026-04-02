@@ -1,11 +1,19 @@
+import asyncio
 from dataclasses import dataclass
 
 import pytest
 from faker import Faker
-from playwright.sync_api import Page
+from playwright.async_api import Page
 
-from pages import SignupPage, LoginPage, HomePageLoggedIn, HomePageNotLoggedIn
-from utils.page_builder import _Pagebuilder
+from pages.account_created import AccountCreatedPage
+from pages.account_information_page import AccountInformationPage
+from pages.cart_page import CartPage
+from pages.home_page import HomePage
+from pages.login_page import LoginPage
+from pages.order_placed_page import OrderPlacedPage
+from pages.payment_page import PaymentPage
+from utils.data_builder import DataBuilder
+from utils.page_builder import PageBuilder
 
 
 @pytest.mark.usefixtures("inject_pages")
@@ -17,14 +25,20 @@ class _BaseTest:
     - frozen=True will prevent fixture injection, don't set
     - eq=False to avoid unhashable type error in pytest
     """
-    builder: _Pagebuilder
+    builder: PageBuilder
     page: Page
     faker: Faker
+    data: DataBuilder
 
-    signup_page: SignupPage
+
     login_page: LoginPage
-    home_page_not_logged: HomePageNotLoggedIn
-    home_page_logged: HomePageLoggedIn
+    home_page: HomePage
+    cart_page: CartPage
+    account_information_page: AccountInformationPage
+    order_placed_page: OrderPlacedPage
+    payment_page: PaymentPage
+    account_created_page: AccountCreatedPage
+
 
 
 # Here precondition classes can be defined that will prepare required setup for tests. E.g. use fixtures for
@@ -33,29 +47,9 @@ class GenericSetup(_BaseTest):
     pass
 
 
-class SignupPageNotRegisteredUser(_BaseTest):
+class HomePageNotLoggedIn(_BaseTest):
 
-    @classmethod
-    def setup_method(cls):
-        cls.signup_page.open()
+    @pytest.fixture(autouse=True)
+    async def open_home_page(self, inject_pages):
+        await self.home_page.open()
 
-
-class LoginPageNotLoggedIn(_BaseTest):
-
-    @classmethod
-    def setup_method(cls):
-        cls.login_page.open()
-
-
-class HomePageNotLogged(_BaseTest):
-
-    @classmethod
-    def setup_method(cls):
-        cls.home_page_not_logged.open()
-
-
-class HomePageLogged(_BaseTest):
-
-    @classmethod
-    def setup_method(cls):
-        cls.home_page_not_logged.open()
