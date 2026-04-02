@@ -35,7 +35,7 @@ class HeaderElement(_BaseElement):
 
     @property
     def signup_login_link(self) -> Locator:
-        return self._header.get_by_role('link', name='Signup / Login', exact=True)
+        return self._header.locator("a[href='/login']")
 
     @property
     def logout_link(self) -> Locator:
