@@ -127,24 +127,6 @@ pip install -r requirements.txt
 playwright install
 ```
 
-### Configuration
-
-Environment variables in `.env`:
-
-```
-BASE_URL="https://automationexercise.com/"
-USERNAME="your_username"
-PASSWORD="your_password"
-```
-
-Browser settings in `pytest.ini`:
-
-```ini
-playwright_browser = chromium
-playwright_headed = True
-playwright_timeout = 10000
-```
-
 ## Running Tests
 
 ```bash
