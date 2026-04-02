@@ -1,7 +1,0 @@
-- head:
-    - body:
-        - textbox "Phone number, username, or email"
-        - textbox "Password"
-        - button "Log In"
-        - button "Log in with Facebook"
-        - link "Forgot password?"
