@@ -3,11 +3,11 @@ import os
 from loguru import logger
 from playwright.async_api import Page
 
-from pages.base_page import _BasePage
+from pages.base_page import BasePage
 from utils.element_builder import ElementBuilder
 
 
-class LoginPage(_BasePage):
+class LoginPage(BasePage):
 
     def __init__(self, page: Page, element_builder: ElementBuilder):
         super().__init__(page)
@@ -18,7 +18,10 @@ class LoginPage(_BasePage):
 
     @property
     def url(self) -> str:
-        return f'{super(_BasePage).url}/login'
+        return f'{super(BasePage).url}/login'
+
+    async def open(self):
+        await self.page.goto(self.url)
 
     async def login(self, username: str, password: str) -> None:
         logger.info(f"Logging in with username: {username}")
@@ -26,3 +29,11 @@ class LoginPage(_BasePage):
         await self.login_form.email_input.fill(username)
         await self.login_form.password_input.fill(password)
         await self.login_form.login_button.click()
+
+    async def signup(self, username: str, email: str) -> None:
+        logger.info(f"Registering new user {username=}")
+        logger.debug(f'Entering {username=}')
+        await self.signup_form.name_input.fill(username)
+        logger.debug(f'Entering {email=}')
+        await self.signup_form.email_input.fill(email)
+        await self.signup_form.signup_button.click()

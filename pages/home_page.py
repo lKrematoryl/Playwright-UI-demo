@@ -1,10 +1,10 @@
 from playwright.async_api import Page
 
-from pages.base_page import _BasePage
+from pages.base_page import BasePage
 from utils.element_builder import ElementBuilder
 
 
-class HomePage(_BasePage):
+class HomePage(BasePage):
 
     def __init__(self, page: Page, element_builder: ElementBuilder):
         super().__init__(page)
@@ -17,7 +17,7 @@ class HomePage(_BasePage):
 
     @property
     def url(self) -> str:
-        return super(_BasePage).url
+        return super().url
 
     async def open(self):
-        await super(_BasePage).open()
+        await self.page.goto(self.url, wait_until="domcontentloaded")

@@ -1,7 +1,8 @@
+import os
 from abc import ABC, abstractmethod
 
 
-class _BasePage(ABC):
+class BasePage(ABC):
     """
     Base class that define common structure for all page objects.
     """
@@ -12,7 +13,7 @@ class _BasePage(ABC):
     @property
     @abstractmethod
     def url(self) -> str:
-        pass
+        return os.getenv("BASE_URL")
 
     async def open(self):
-        await self.page.goto(self.url)
+        pass

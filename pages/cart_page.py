@@ -1,10 +1,10 @@
 from playwright.async_api import Page
 
-from pages.base_page import _BasePage
+from pages.base_page import BasePage
 from utils.element_builder import ElementBuilder
 
 
-class CartPage(_BasePage):
+class CartPage(BasePage):
 
     def __init__(self, page: Page, element_builder: ElementBuilder):
         super().__init__(page)
@@ -17,4 +17,4 @@ class CartPage(_BasePage):
 
     @property
     def url(self) -> str:
-        return f'{super(_BasePage).url}/view_cart'
+        return f'{super(BasePage).url}/view_cart'

@@ -1,11 +1,10 @@
-
 from playwright.async_api import Page
 
-from pages.base_page import _BasePage
+from pages.base_page import BasePage
 from utils.element_builder import ElementBuilder
 
 
-class OrderPlacedPage(_BasePage):
+class OrderPlacedPage(BasePage):
 
     def __init__(self, page: Page, element_builder: ElementBuilder):
         super().__init__(page)
@@ -15,4 +14,7 @@ class OrderPlacedPage(_BasePage):
 
     @property
     def url(self) -> str:
-        return f'{super(_BasePage).url}/payment_done'
+        return f'{super(BasePage).url}/payment_done'
+
+    async def open(self):
+        await self.page.goto(self.url)
