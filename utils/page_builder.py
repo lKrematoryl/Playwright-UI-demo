@@ -3,6 +3,7 @@ from typing import Iterator, Tuple
 
 from playwright.async_api import Page
 
+from pages.account_created import AccountCreatedPage
 from pages.account_information_page import AccountInformationPage
 from pages.cart_page import CartPage
 from pages.home_page import HomePage
@@ -88,3 +89,11 @@ class PageBuilder:
     def create_order_placed_page(self) -> OrderPlacedPage:
         """ Creates a new instance of OrderPlacedPage """
         return OrderPlacedPage(self.page, self._eb)
+
+    @cached_property
+    def account_created_page(self):
+        return AccountCreatedPage(self.page, self._eb)
+
+    def create_account_created_page(self) -> AccountCreatedPage:
+        """ Creates a new instance of AccountCreatedPage """
+        return AccountCreatedPage(self.page, self._eb)
