@@ -4,6 +4,8 @@ from faker import Faker
 
 @dataclass
 class RegistrationData:
+    username: str
+    email: str
     title: str
     name: str
     password: str
@@ -24,6 +26,8 @@ class RegistrationData:
     @classmethod
     def valid(cls, faker: Faker, **overrides) -> 'RegistrationData':
         defaults = dict(
+            username=faker.user_name(),
+            email=faker.email(),
             title='Mr',
             name=faker.name(),
             password=faker.password(),
@@ -46,6 +50,8 @@ class RegistrationData:
     @classmethod
     def empty_fields(cls) -> 'RegistrationData':
         return cls(
+            username='',
+            email='',
             title='',
             name='',
             password='',
@@ -67,6 +73,8 @@ class RegistrationData:
     @classmethod
     def invalid(cls, faker: Faker) -> 'RegistrationData':
         return cls(
+            username='@$#*!&#',
+            email='aassdd',
             title='Mr',
             name=faker.name(),
             password='1',
