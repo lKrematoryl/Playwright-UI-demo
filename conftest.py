@@ -1,16 +1,35 @@
+import asyncio
+import re
+
 import pytest
 from faker import Faker
-from playwright.async_api import Page
+from playwright.async_api import Page, BrowserContext
 
+from utils.data_builder import DataBuilder
 from utils.page_builder import PageBuilder
 
 
 @pytest.fixture
-def _page_builder_instance(page: Page) -> PageBuilder: return PageBuilder(page)
+async def _page_builder_instance(page: Page) -> PageBuilder:
+    page.set_default_timeout(10000)
+    page.set_default_navigation_timeout(15000)
+    return PageBuilder(page)
 
 
 @pytest.fixture(scope="session")
 def _faker_instance() -> Faker: return Faker()
+
+@pytest.fixture
+async def context(context: BrowserContext) -> BrowserContext:
+    """
+    Overrides pytest-playwright's default context fixture.
+    Blocks ad/tracking domains that overlay page elements and cause TimeoutErrors.
+    """
+    await context.route(
+        re.compile(r"(google|googlesyndication|googleadservices|doubleclick|adservice)\.com"),
+        lambda route: route.abort()
+    )
+    return context
 
 
 @pytest.fixture(scope="session")
@@ -56,3 +75,13 @@ def inject_faker(request: pytest.FixtureRequest, _faker_instance: Faker) -> None
     cls = getattr(request, "cls", None)
     if cls and getattr(cls, "__faker_enabled__", True):
         cls.faker = _faker_instance
+
+@pytest.fixture(autouse=True)
+def inject_data_builder(request: pytest.FixtureRequest, _faker_instance: Faker) -> None:
+    """
+    Fixture injects data builder into the test class instance.
+    Test data is available in test cases via self.data reference.
+    """
+    cls = getattr(request, "cls", None)
+    if cls:
+        cls.data = DataBuilder(_faker_instance)
