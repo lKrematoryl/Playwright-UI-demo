@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import dataclass
 
 import pytest
@@ -18,7 +17,7 @@ from utils.page_builder import PageBuilder
 
 @pytest.mark.usefixtures("inject_pages")
 @dataclass(init=False, eq=False)
-class _BaseTest:
+class BaseTest:
     """
     This class is required to tell the IDE that test class, that inherits from it, will have these attributes.
     Excluded from initialization as used as type hinting only. Each new element must be listed in this class.
@@ -28,8 +27,7 @@ class _BaseTest:
     builder: PageBuilder
     page: Page
     faker: Faker
-    data: DataBuilder
-
+    test_data: DataBuilder
 
     login_page: LoginPage
     home_page: HomePage
@@ -38,18 +36,3 @@ class _BaseTest:
     order_placed_page: OrderPlacedPage
     payment_page: PaymentPage
     account_created_page: AccountCreatedPage
-
-
-
-# Here precondition classes can be defined that will prepare required setup for tests. E.g. use fixtures for
-# opening page, registering user, logging in, etc. Each precondition class must inherit from _BaseTest
-class GenericSetup(_BaseTest):
-    pass
-
-
-class HomePageNotLoggedIn(_BaseTest):
-
-    @pytest.fixture(autouse=True)
-    async def open_home_page(self, inject_pages):
-        await self.home_page.open()
-
