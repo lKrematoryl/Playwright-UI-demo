@@ -29,8 +29,9 @@ The framework follows a **three-layer architecture** separating locators, page l
 │   ├── payment_page.py
 │   └── order_placed_page.py
 │
-├── tests/             # Layer 3: Test suites and preconditions
-│   ├── preconditions.py
+├── tests/             # Layer 3: Test suites
+│   ├── conftest.py    # Test fixtures: preconditions and postconditions
+│   ├── base_test.py   # Type hints for fixture-injected attributes
 │   └── end_to_end.py
 │
 ├── utils/             # Builders, models, helpers
@@ -40,7 +41,7 @@ The framework follows a **three-layer architecture** separating locators, page l
 │   ├── models.py
 │   └── custom_types.py
 │
-├── conftest.py        # Fixtures: page injection, faker, ad-blocking, timeouts
+├── conftest.py        # Root fixtures: browser config, injection, timeouts
 ├── pytest.ini         # Pytest and Playwright configuration
 ├── .env               # Environment variables (BASE_URL, credentials)
 └── requirements.txt   # Dependencies
@@ -58,48 +59,75 @@ The framework uses dedicated builders for each layer:
 
 ### Automatic Fixture Injection
 
-Page objects and test data are injected into test classes automatically via `conftest.py` fixtures. No manual instantiation needed — access everything through `self`:
+Page objects and test data are injected into test classes automatically via root `conftest.py` fixtures. No manual instantiation needed — access everything through `self`:
 
 ```python
-class TestEndToEnd(HomePageNotLoggedIn):
+class TestEndToEnd(BaseTest):
 
-    async def test_register_user(self):
-        user = self.data.valid_user
-        await self.home_page.header.signup_login_link.click()
-        await self.login_page.signup(username=user.username, email=user.email)
-        await self.account_information_page.register_user(data=user)
+    async def test_example(self, open_home_page):
+        await self.home_page.header.products_link.click()
 ```
 
-### Precondition Classes
+`BaseTest` provides type hints for all injected attributes, giving full IDE autocomplete with zero behavioral logic.
 
-Test setup is handled through inheritance. Precondition classes define `autouse` fixtures that prepare the required state:
+### Composable Preconditions and Postconditions
+
+Test setup and teardown is handled through **composable fixtures** defined in `tests/conftest.py`. Each test requests only the fixtures it needs — no rigid inheritance hierarchies:
 
 ```python
-class HomePageNotLoggedIn(_BaseTest):
-    @pytest.fixture(autouse=True)
-    async def open_home_page(self, inject_pages):
-        await self.home_page.open()
+class TestEndToEnd(BaseTest):
 
-class TestSomething(HomePageNotLoggedIn):
-    # home page is already open when test starts
-    async def test_example(self):
+    # test that only needs the home page open
+    async def test_register_user(self, open_home_page):
+        ...
+
+    # test that needs a registered user (includes open_home_page as dependency)
+    async def test_delete_user(self, register_and_delete_user):
+        ...
+
+    # test that needs a registered + logged out user
+    async def test_login(self, register_user_and_logout):
         ...
 ```
 
+Fixtures chain together via dependencies:
+
+```
+open_home_page
+    └── register_user (depends on open_home_page)
+            ├── register_and_delete_user (setup + teardown)
+            └── register_user_and_logout (setup + logout)
+```
+
+Precondition fixtures that create test data yield it back to the test:
+
+```python
+async def test_login(self, register_user_and_logout):
+    user = register_user_and_logout  # RegistrationData object
+    await self.login_page.login(email=user.email, password=user.password)
+```
+
+### Two-Level Conftest
+
+- **Root `conftest.py`** — framework infrastructure: browser configuration, ad-blocking, timeout defaults, automatic injection of page objects, faker, and data builder.
+- **`tests/conftest.py`** — test-specific fixtures: preconditions (open page, register user), postconditions (delete account), and composed workflows.
+
 ### Test Data Models
 
-Test data is managed through dataclasses with factory methods:
+Test data is managed through dataclasses with factory methods, accessed via `DataBuilder`:
 
 ```python
 # Random valid user
-user = self.data.valid_user
+user = self.test_data.valid_user
 
 # Random invalid user
-user = self.data.invalid_user
+user = self.test_data.invalid_user
 
 # Custom overrides
-user = self.data.custom_user(title='Mrs', country='Canada')
+user = self.test_data.custom_user(title='Mrs', country='Canada')
 ```
+
+Each access generates fresh random data via Faker. The `DataBuilder` is injected once per test — it's a factory, not stored data.
 
 ## Setup
 
@@ -125,6 +153,24 @@ pip install -r requirements.txt
 
 # Install Playwright browsers
 playwright install
+```
+
+### Configuration
+
+Environment variables in `.env`:
+
+```
+BASE_URL="https://automationexercise.com/"
+USERNAME="your_username"
+PASSWORD="your_password"
+```
+
+Browser settings in `pytest.ini`:
+
+```ini
+playwright_browser = chromium
+playwright_headed = True
+playwright_timeout = 10000
 ```
 
 ## Running Tests
@@ -154,12 +200,19 @@ pytest -v
 2. Register elements in `ElementBuilder` (`utils/element_builder.py`)
 3. Create page class in `pages/`
 4. Register page in `PageBuilder` (`utils/page_builder.py`)
-5. Add type hint to `_BaseTest` in `tests/preconditions.py`
+5. Add type hint to `BaseTest` in `tests/base_test.py`
 
 ### Adding Test Data
 
 1. Create a dataclass with `valid`/`invalid` factory methods in `utils/models.py`
 2. Add a property/method to `DataBuilder` in `utils/data_builder.py`
+
+### Adding Preconditions/Postconditions
+
+1. Create a fixture in `tests/conftest.py`
+2. Chain it with existing fixtures via dependencies
+3. Use `yield` for postcondition (teardown) logic
+4. Tests request the fixture by name via argument or `@pytest.mark.usefixtures`
 
 ## Stack
 
