@@ -1,4 +1,3 @@
-import asyncio
 import re
 
 import pytest
@@ -18,6 +17,7 @@ async def _page_builder_instance(page: Page) -> PageBuilder:
 
 @pytest.fixture(scope="session")
 def _faker_instance() -> Faker: return Faker()
+
 
 @pytest.fixture
 async def context(context: BrowserContext) -> BrowserContext:
@@ -76,6 +76,7 @@ def inject_faker(request: pytest.FixtureRequest, _faker_instance: Faker) -> None
     if cls and getattr(cls, "__faker_enabled__", True):
         cls.faker = _faker_instance
 
+
 @pytest.fixture(autouse=True)
 def inject_data_builder(request: pytest.FixtureRequest, _faker_instance: Faker) -> None:
     """
@@ -84,4 +85,4 @@ def inject_data_builder(request: pytest.FixtureRequest, _faker_instance: Faker) 
     """
     cls = getattr(request, "cls", None)
     if cls:
-        cls.data = DataBuilder(_faker_instance)
+        cls.test_data = DataBuilder(_faker_instance)

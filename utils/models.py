@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from random import randint
+
 from faker import Faker
 
 
@@ -27,7 +29,7 @@ class RegistrationData:
     def valid(cls, faker: Faker, **overrides) -> 'RegistrationData':
         defaults = dict(
             username=faker.user_name(),
-            email=faker.email(),
+            email=f'{faker.email()}{randint(1, 999)}',
             title='Mr',
             name=faker.name(),
             password=faker.password(),
@@ -74,7 +76,7 @@ class RegistrationData:
     def invalid(cls, faker: Faker) -> 'RegistrationData':
         return cls(
             username='@$#*!&#',
-            email='aassdd',
+            email='aassdd@asdasdasd.com',
             title='Mr',
             name=faker.name(),
             password='1',

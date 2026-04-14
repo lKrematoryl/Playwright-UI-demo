@@ -24,3 +24,7 @@ class LoginFormElement(_BaseElement):
     @property
     def login_button(self) -> Locator:
         return self._section.get_by_role('button', name='Login')
+
+    @property
+    def error_message(self) -> Locator:
+        return self._section.get_by_text('Your email or password is incorrect!')

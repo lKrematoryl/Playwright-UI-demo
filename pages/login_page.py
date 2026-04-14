@@ -1,5 +1,3 @@
-import os
-
 from loguru import logger
 from playwright.async_api import Page
 
@@ -18,15 +16,15 @@ class LoginPage(BasePage):
 
     @property
     def url(self) -> str:
-        return f'{super(BasePage).url}/login'
+        return f'{super().url}/login'
 
     async def open(self):
         await self.page.goto(self.url)
 
-    async def login(self, username: str, password: str) -> None:
-        logger.info(f"Logging in with username: {username}")
-        logger.debug(f'Entering {username=} and {password=}')
-        await self.login_form.email_input.fill(username)
+    async def login(self, email: str, password: str) -> None:
+        logger.info(f"Logging in with username: {email}")
+        logger.debug(f'Entering {email=} and {password=}')
+        await self.login_form.email_input.fill(email)
         await self.login_form.password_input.fill(password)
         await self.login_form.login_button.click()
 
